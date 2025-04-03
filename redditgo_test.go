@@ -1,4 +1,4 @@
-package main
+package redditgo
 
 import (
 	"net/http"

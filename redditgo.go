@@ -1,4 +1,4 @@
-package main
+package redditgo
 
 import (
 	"log/slog"
@@ -69,6 +69,6 @@ func (c RedditClient) RefreshRedditAccessToken(user *User) (*User, bool) {
 
 var logger *slog.Logger
 
-func main() {
+func init() {
 	logger = slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelInfo}))
 }

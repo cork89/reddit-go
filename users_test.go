@@ -1,4 +1,4 @@
-package main
+package redditgo
 
 import (
 	"bytes"
@@ -107,7 +107,7 @@ var fakeAuthCaller = FakeRedditAuthCaller{envs: &userTestClientEnvs}
 var errorAuthCaller = ErrorRedditAuthCaller{envs: &userTestClientEnvs}
 
 func setup() {
-	main()
+	// main()
 	clock = FakeClock{}
 }
 
