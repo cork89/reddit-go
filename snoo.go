@@ -30,12 +30,13 @@ const (
 )
 
 type Post struct {
-	ImageUrl string    `json:"imageUrl"`
-	Comments []Comment `json:"comments,omitempty"`
-	PostType Base      `json:"linkType"`
-	QueryId  string    `json:"queryId"`
-	Author   string    `json:"author"`
-	Title    string    `json:"title"`
+	ImageUrl  string    `json:"imageUrl"`
+	Comments  []Comment `json:"comments,omitempty"`
+	PostType  Base      `json:"linkType"`
+	QueryId   string    `json:"queryId"`
+	Author    string    `json:"author"`
+	Title     string    `json:"title"`
+	Subreddit string    `json:"subreddit"`
 }
 
 type Comment struct {
@@ -126,6 +127,7 @@ func parsePostData(data map[string]interface{}) Post {
 	post.Author = postData["author"].(string)
 	post.Title = postData["title"].(string)
 	post.PostType = postType
+	post.Subreddit = strings.ToLower(postData["subreddit_name_prefixed"].(string))
 
 	return post
 }

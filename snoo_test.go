@@ -69,11 +69,12 @@ func TestNewPost_Returned(t *testing.T) {
 	cmt3 := Comment{Comment: "Weird for a group that seems to care a lot about what Kevin Sorbo and Kid Rock thinks, even though I never hear about them anymore otherwise.", Author: "mtaw"}
 	cmts := []Comment{cmt1, cmt2, cmt3}
 	want := Post{Comments: cmts,
-		ImageUrl: "https://i.redd.it/h2y07ob2m3od1.png",
-		PostType: Image,
-		QueryId:  redditReq.AsString(),
-		Author:   "Xtianus21",
-		Title:    "Taylor Swift with a Cat Named Benjamin Button"}
+		ImageUrl:  "https://i.redd.it/h2y07ob2m3od1.png",
+		PostType:  Image,
+		QueryId:   redditReq.AsString(),
+		Author:    "Xtianus21",
+		Title:     "Taylor Swift with a Cat Named Benjamin Button",
+		Subreddit: "r/pics"}
 
 	post, err := testRedditCaller.getRedditDetails(redditReq, user)
 
