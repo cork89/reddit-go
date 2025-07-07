@@ -200,6 +200,7 @@ func (r RealRedditCaller) callRedditApi(req RedditRequest, user User) (post Post
 
 	dataRequest, err := http.NewRequest("GET", requestUrl, nil)
 	dataRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", user.AccessToken))
+	dataRequest.Header.Add("User-Agent", USER_AGENT)
 
 	res, err := client.Do(dataRequest)
 
@@ -208,9 +209,10 @@ func (r RealRedditCaller) callRedditApi(req RedditRequest, user User) (post Post
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode == 401 {
+	switch res.StatusCode {
+	case 401:
 		return post, errors.New("not authorized")
-	} else if res.StatusCode == 429 {
+	case 429:
 		return post, errors.New("too many requests")
 	}
 

@@ -6,6 +6,8 @@ import (
 	"os"
 )
 
+const USER_AGENT string = "RddtufRuntime:reddituf:1.0.0 by /u/cat_tastrophe"
+
 type ClientEnvs struct {
 	JwtSecret   string
 	OauthState  string

@@ -152,6 +152,7 @@ func getUserData(accessToken AccessTokenBody) (user User, ok bool) {
 	}
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken.AccessToken))
+	req.Header.Add("User-Agent", USER_AGENT)
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -193,6 +194,7 @@ func (r RealRedditAuthCaller) callRefreshAccessTokenApi(postBody PostBody) (*htt
 	}
 	req.Header.Add("Authorization", fmt.Sprintf("Basic %s", r.envs.BasicAuth))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Add("User-Agent", USER_AGENT)
 
 	return client.Do(req)
 }
@@ -211,6 +213,7 @@ func (r RealRedditAuthCaller) callAccessTokenApi(postBody PostBody) (*http.Respo
 	}
 	req.Header.Add("Authorization", fmt.Sprintf("Basic %s", r.envs.BasicAuth))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Add("User-Agent", USER_AGENT)
 
 	return client.Do(req)
 }
