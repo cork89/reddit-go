@@ -80,6 +80,7 @@ type JsonData []map[string]interface{}
 type RedditCaller interface {
 	callRedditApi(req RedditRequest, user User) (post Post, err error)
 	getRedditDetails(req RedditRequest, user User) (Post, error)
+	unfurlRedditLink(subreddit string, shortLink string, user User) (string, error)
 }
 
 type RealRedditCaller struct{}
@@ -228,4 +229,38 @@ func (r RealRedditCaller) getRedditDetails(req RedditRequest, user User) (Post, 
 	}
 	logger.Debug("Leaving getRedditDetails")
 	return res, nil
+}
+
+func (r RealRedditCaller) unfurlRedditLink(subreddit string, shortLink string, user User) (link string, err error) {
+	base := "https://oauth.reddit.com"
+	requestUrl, err := url.JoinPath(base, fmt.Sprintf("r/%s/s/%s", subreddit, shortLink))
+	if err != nil {
+		logger.Debug("Error calling reddit api", "err", err)
+	}
+
+	logger.Debug("Making request", "url", requestUrl)
+
+	dataRequest, err := http.NewRequest("GET", requestUrl, nil)
+	dataRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", user.AccessToken))
+	dataRequest.Header.Add("User-Agent", USER_AGENT)
+
+	res, err := client.Do(dataRequest)
+
+	if err != nil {
+		if err == http.ErrUseLastResponse {
+			logger.Debug("Redirect was prevented")
+		} else {
+			logger.Debug("Error calling the reddit api", "res", res)
+		}
+	}
+	defer res.Body.Close()
+
+	switch res.StatusCode {
+	case 401:
+		return link, errors.New("not authorized")
+	case 429:
+		return link, errors.New("too many requests")
+	}
+
+	return res.Header.Get("Location"), nil
 }

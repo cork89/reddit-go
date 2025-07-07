@@ -43,6 +43,10 @@ func (f FakeRedditCaller) getRedditDetails(req RedditRequest, user User) (Post, 
 	return res, nil
 }
 
+func (f FakeRedditCaller) unfurlRedditLink(subreddit string, shortLink string, user User) (string, error) {
+	return "testing", nil
+}
+
 type ErrorRedditCaller struct{}
 
 var errorRedditCaller RedditCaller = &ErrorRedditAuthCaller{}
@@ -58,6 +62,10 @@ func (e ErrorRedditAuthCaller) getRedditDetails(req RedditRequest, user User) (P
 		return res, err
 	}
 	return res, nil
+}
+
+func (f ErrorRedditAuthCaller) unfurlRedditLink(subreddit string, shortLink string, user User) (string, error) {
+	return "testing", nil
 }
 
 func TestNewPost_Returned(t *testing.T) {

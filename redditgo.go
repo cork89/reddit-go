@@ -38,6 +38,11 @@ func (c *RedditClient) New(clientEnvs ClientEnvs) *RedditClient {
 	return c
 }
 
+// Unfurl a reddit mobile share link to the full url
+func (c RedditClient) UnfurlRedditLink(subreddit string, shortLink string, user User) (string, error) {
+	return c.apiCaller.unfurlRedditLink(subreddit, shortLink, user)
+}
+
 // Retrieve a reddit post details including: image url, comment, author, etc.
 // The request contains a specific subreddit, post, and comment, as well as a user for their access token
 func (c RedditClient) GetRedditDetails(req RedditRequest, user User) (Post, error) {
@@ -73,4 +78,9 @@ var logger *slog.Logger
 
 func init() {
 	logger = slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelDebug}))
+	client = http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
 }
