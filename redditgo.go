@@ -70,5 +70,5 @@ func (c RedditClient) RefreshRedditAccessToken(user *User) (*User, bool) {
 var logger *slog.Logger
 
 func init() {
-	logger = slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelInfo}))
+	logger = slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelDebug}))
 }
