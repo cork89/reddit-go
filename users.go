@@ -167,6 +167,7 @@ func getUserData(accessToken AccessTokenBody) (user User, ok bool) {
 		logger.Debug("error reading response body", "err", err)
 		return user, false
 	}
+	logger.Debug("getUserData", "body", string(body))
 	err = json.Unmarshal(body, &userResponse)
 	if err != nil {
 		logger.Debug("failed to unmarshal", "body", string(body), ", err: ", err)
