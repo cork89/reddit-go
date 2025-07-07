@@ -191,7 +191,7 @@ func (r RealRedditAuthCaller) callRefreshAccessTokenApi(postBody PostBody) (*htt
 		logger.Debug("failed to create post request", "err", err)
 		return nil, err
 	}
-	req.Header.Add("Authorization", fmt.Sprintf("Basic %s", r.envs.basicAuth))
+	req.Header.Add("Authorization", fmt.Sprintf("Basic %s", r.envs.BasicAuth))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	return client.Do(req)
@@ -209,7 +209,7 @@ func (r RealRedditAuthCaller) callAccessTokenApi(postBody PostBody) (*http.Respo
 		logger.Debug("failed to create post request", "err", err)
 		return nil, err
 	}
-	req.Header.Add("Authorization", fmt.Sprintf("Basic %s", r.envs.basicAuth))
+	req.Header.Add("Authorization", fmt.Sprintf("Basic %s", r.envs.BasicAuth))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	return client.Do(req)
@@ -244,8 +244,8 @@ func getAccessToken(postBody PostBody, callApi func(PostBody) (*http.Response, e
 }
 
 func (r RealRedditAuthCaller) getRedditAccessToken(state string, code string) (accessToken *AccessTokenBody, ok bool) {
-	if state != r.envs.oauthState {
-		logger.Debug("incorrect oauth state", "state", state, "expectedState", r.envs.oauthState)
+	if state != r.envs.OauthState {
+		logger.Debug("incorrect oauth state", "state", state, "expectedState", r.envs.OauthState)
 		return nil, false
 	}
 
@@ -257,7 +257,7 @@ func (r RealRedditAuthCaller) getRedditAccessToken(state string, code string) (a
 	body := PostBody{
 		GrantType:   "authorization_code",
 		Code:        code,
-		RedirectUri: r.envs.redirectUri,
+		RedirectUri: r.envs.RedirectUri,
 	}
 	return getAccessToken(body, r.callAccessTokenApi)
 }

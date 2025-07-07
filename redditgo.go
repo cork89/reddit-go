@@ -7,10 +7,10 @@ import (
 )
 
 type ClientEnvs struct {
-	jwtSecret   string
-	oauthState  string
-	basicAuth   string
-	redirectUri string
+	JwtSecret   string
+	OauthState  string
+	BasicAuth   string
+	RedirectUri string
 }
 
 type Client interface {
@@ -44,12 +44,12 @@ func (c RedditClient) GetRedditDetails(req RedditRequest, user User) (Post, erro
 
 // Parse the reddit go cookie for the users jwt claim subject, returns true if successful, false otherwise
 func (c RedditClient) GetUserCookie(req *http.Request) (string, bool) {
-	return getUserCookie(req, c.clientEnvs.jwtSecret)
+	return getUserCookie(req, c.clientEnvs.JwtSecret)
 }
 
 // Creates an http cookie for a specific user
 func (c RedditClient) CreateUserCookie(userCookie UserCookie) http.Cookie {
-	return createUserCookie(userCookie, c.clientEnvs.jwtSecret)
+	return createUserCookie(userCookie, c.clientEnvs.JwtSecret)
 }
 
 // Retreives data for a user including their username and icon img url

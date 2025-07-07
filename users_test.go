@@ -45,8 +45,8 @@ func (FakeRedditAuthCaller) callRefreshAccessTokenApi(postBody PostBody) (*http.
 }
 
 func (f FakeRedditAuthCaller) getRedditAccessToken(state string, code string) (accessToken *AccessTokenBody, ok bool) {
-	if state != f.envs.oauthState {
-		logger.Debug("incorrect oauth state", "state", state, "expectedState", f.envs.oauthState)
+	if state != f.envs.OauthState {
+		logger.Debug("incorrect oauth state", "state", state, "expectedState", f.envs.OauthState)
 		return nil, false
 	}
 
@@ -58,7 +58,7 @@ func (f FakeRedditAuthCaller) getRedditAccessToken(state string, code string) (a
 	body := PostBody{
 		GrantType:   "authorization_code",
 		Code:        code,
-		RedirectUri: f.envs.redirectUri,
+		RedirectUri: f.envs.RedirectUri,
 	}
 
 	return getAccessToken(body, f.callAccessTokenApi)
@@ -97,10 +97,10 @@ func (e ErrorRedditAuthCaller) refreshRedditAccessToken(user *User) (*User, bool
 }
 
 var userTestClientEnvs = ClientEnvs{
-	jwtSecret:   "test",
-	oauthState:  "state",
-	basicAuth:   "basic",
-	redirectUri: "123",
+	JwtSecret:   "test",
+	OauthState:  "state",
+	BasicAuth:   "basic",
+	RedirectUri: "123",
 }
 
 var fakeAuthCaller = FakeRedditAuthCaller{envs: &userTestClientEnvs}
