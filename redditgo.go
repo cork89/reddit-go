@@ -8,6 +8,14 @@ import (
 
 const USER_AGENT string = "RddtufRuntime:reddituf:1.0.0 by /u/cat_tastrophe"
 
+type UnfurledLink struct {
+	Link               string
+	StatusCode         int
+	RatelimitRemaining string
+	RatelimitUsed      string
+	RatelimitReset     string
+}
+
 type ClientEnvs struct {
 	JwtSecret   string
 	OauthState  string
@@ -39,7 +47,7 @@ func (c *RedditClient) New(clientEnvs ClientEnvs) *RedditClient {
 }
 
 // Unfurl a reddit mobile share link to the full url
-func (c RedditClient) UnfurlRedditLink(subreddit string, shortLink string, user User) (string, error) {
+func (c RedditClient) UnfurlRedditLink(subreddit string, shortLink string, user User) UnfurledLink {
 	return c.apiCaller.unfurlRedditLink(subreddit, shortLink, user)
 }
 

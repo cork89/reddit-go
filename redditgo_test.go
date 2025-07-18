@@ -20,8 +20,8 @@ func (ClientRedditCaller) getRedditDetails(req RedditRequest, user User) (post P
 	return post, nil
 }
 
-func (ClientRedditCaller) unfurlRedditLink(subreddit string, shortLink string, user User) (string, error) {
-	return "testing", nil
+func (ClientRedditCaller) unfurlRedditLink(subreddit string, shortLink string, user User) UnfurledLink {
+	return UnfurledLink{}
 }
 
 type ClientAuthCaller struct{}

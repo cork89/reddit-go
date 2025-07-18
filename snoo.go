@@ -80,7 +80,7 @@ type JsonData []map[string]interface{}
 type RedditCaller interface {
 	callRedditApi(req RedditRequest, user User) (post Post, err error)
 	getRedditDetails(req RedditRequest, user User) (Post, error)
-	unfurlRedditLink(subreddit string, shortLink string, user User) (string, error)
+	unfurlRedditLink(subreddit string, shortLink string, user User) UnfurledLink
 }
 
 type RealRedditCaller struct{}
@@ -231,7 +231,7 @@ func (r RealRedditCaller) getRedditDetails(req RedditRequest, user User) (Post, 
 	return res, nil
 }
 
-func (r RealRedditCaller) unfurlRedditLink(subreddit string, shortLink string, user User) (link string, err error) {
+func (r RealRedditCaller) unfurlRedditLink(subreddit string, shortLink string, user User) UnfurledLink {
 	base := "https://oauth.reddit.com"
 	requestUrl, err := url.JoinPath(base, fmt.Sprintf("r/%s/s/%s", subreddit, shortLink))
 	if err != nil {
@@ -239,8 +239,15 @@ func (r RealRedditCaller) unfurlRedditLink(subreddit string, shortLink string, u
 	}
 
 	logger.Debug("Making request", "url", requestUrl)
+	var unfurledLink UnfurledLink
 
 	dataRequest, err := http.NewRequest("GET", requestUrl, nil)
+
+	if err != nil {
+		unfurledLink.StatusCode = 500
+		return unfurledLink
+	}
+
 	dataRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", user.AccessToken))
 	dataRequest.Header.Add("User-Agent", USER_AGENT)
 
@@ -255,12 +262,10 @@ func (r RealRedditCaller) unfurlRedditLink(subreddit string, shortLink string, u
 	}
 	defer res.Body.Close()
 
-	switch res.StatusCode {
-	case 401:
-		return link, errors.New("not authorized")
-	case 429:
-		return link, errors.New("too many requests")
-	}
-
-	return res.Header.Get("Location"), nil
+	unfurledLink.RatelimitRemaining = res.Header.Get("x-ratelimit-remaining")
+	unfurledLink.RatelimitReset = res.Header.Get("x-ratelimit-reset")
+	unfurledLink.RatelimitUsed = res.Header.Get("x-ratelimit-used")
+	unfurledLink.StatusCode = res.StatusCode
+	unfurledLink.Link = res.Header.Get("Location")
+	return unfurledLink
 }
